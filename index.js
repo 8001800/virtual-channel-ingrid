@@ -40,7 +40,8 @@ const server = app.listen(port, async () => {
   await connectDb()
   await initWeb3()
   await initChannelManager()
-  await channelListener(getChannelManager().address)
+  console.log('contractAddress: ', getChannelManager().options.address)
+  await channelListener(getChannelManager().options.address)
 })
 if (process.env.ENVIRONMENT === 'DEV') {
   console.log('Running in DEV mode.')
