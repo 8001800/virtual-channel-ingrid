@@ -39,21 +39,9 @@ const port = process.env.PORT || 3000
 const server = app.listen(port, async () => {
   const host = server.address().address
   const port = server.address().port
-  console.log(`Ethcalate Hub listening at http://${host}:${port}`)
+  console.log(`Ethcalate Ingrid listening at http://${host}:${port}`)
   await connectDb()
   await initWeb3()
-
-  const contractAddress = process.env.CONTRACT_ADDRESS
-  console.log('contractAddress: ', contractAddress)
-
-  try {
-    await initChannelManager(contractAddress)
-    await initListener(contractAddress)
-  } catch (e) {
-    console.log('e: ', e)
-    console.log('Could not initialize channel manager contract, aborting.')
-    process.exit(1)
-  }
 })
 if (process.env.ENVIRONMENT === 'DEV') {
   console.log('Running in DEV mode.')
