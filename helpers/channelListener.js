@@ -1,5 +1,6 @@
-const { getChannelManager } = require('../web3')
+const { getChannelManager, getWeb3 } = require('../web3')
 const { getModels } = require('../models')
+const Ethcalate = require('../../ethcalate-client/src')
 
 async function processChannelOpen ({
   channelId,
@@ -12,7 +13,14 @@ async function processChannelOpen ({
 }) {}
 
 module.exports = async contractAddress => {
+  const web3 = getWeb3()
   const channelManager = getChannelManager()
+  const ethcalate = new Ethcalate(
+    web3,
+    contractAddress,
+    'http://localhost:3000'
+  )
+  console.log('ethcalate: ', ethcalate)
 
   channelManager.events.allEvents(async (err, event) => {
     if (err) {

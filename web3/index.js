@@ -12,6 +12,7 @@ module.exports.initWeb3 = async () => {
     const port = process.env.ETH_PORT ? process.env.ETH_PORT : '9545'
     web3 = new Web3(`ws://localhost:${port}`)
     const accounts = await web3.eth.getAccounts()
+    console.log('accounts: ', accounts)
     accountAddress = accounts[0]
     console.log('accountAddress: ', accountAddress)
   } else {

@@ -2,10 +2,9 @@ require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const setupHub = require('./hub')
-const { initWeb3, initChannelManager } = require('./web3')
+const { initWeb3, initChannelManager, getChannelManager } = require('./web3')
 const { connectDb } = require('./models')
-const initListener = require('./hub/channelListener')
+const channelListener = require('./helpers/channelListener')
 
 // express instance
 const app = express()
@@ -30,8 +29,6 @@ app.get('/hello', function (req, res) {
   res.send('Hello World')
 })
 
-setupHub(app)
-
 app.set('trust proxy', true)
 app.set('trust proxy', 'loopback')
 
@@ -42,6 +39,8 @@ const server = app.listen(port, async () => {
   console.log(`Ethcalate Ingrid listening at http://${host}:${port}`)
   await connectDb()
   await initWeb3()
+  await initChannelManager()
+  await channelListener(getChannelManager().address)
 })
 if (process.env.ENVIRONMENT === 'DEV') {
   console.log('Running in DEV mode.')
