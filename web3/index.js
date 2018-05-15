@@ -14,7 +14,8 @@ module.exports.initWeb3 = async () => {
     const accounts = await web3.eth.getAccounts()
     console.log('accounts: ', accounts)
     accountAddress = accounts[0]
-    console.log('accountAddress: ', accountAddress)
+    web3.eth.defaultAccount = accounts[0]
+    console.log('defaultAccount: ', web3.eth.defaultAccount)
   } else {
     if (!process.env.ETH_KEY) {
       throw new Error(
@@ -26,6 +27,7 @@ module.exports.initWeb3 = async () => {
     const account = web3.eth.accounts.privateKeyToAccount(process.env.ETH_KEY)
     web3.eth.accounts.wallet.add(account)
     accountAddress = web3.eth.accounts.wallet[0].address
+    web3.eth.defaultAccount = accountAddress
     console.log('accountAddress: ', accountAddress)
   }
   const balance = await web3.eth.getBalance(accountAddress)
