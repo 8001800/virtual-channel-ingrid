@@ -3,7 +3,7 @@ const { getModels } = require('../models')
 const Ethcalate = require('../../ethcalate-client/src')
 
 async function processChannelOpen (
-  { channelId, agentA, agentB, tokenContract, depositA, challenge },
+  { channelId, agentB, tokenContract, depositA },
   ethcalate,
   defaultAccount
 ) {
@@ -16,7 +16,7 @@ async function processChannelOpen (
         await ethcalate.joinChannel({
           channelId,
           tokenContract: null,
-          depositInWei: '0'
+          depositInWei: depositA
         })
         console.log(`Joined channel ${channelId} as Ingrid`)
       } catch (e) {
