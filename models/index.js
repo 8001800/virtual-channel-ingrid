@@ -62,6 +62,7 @@ module.exports.getModels = () => {
     User,
     Transaction,
     Channel,
-    VirtualChannel
+    VirtualChannel,
+    Certificate
   }
 }
