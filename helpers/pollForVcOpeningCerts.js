@@ -41,7 +41,7 @@ module.exports = async virtualChannel => {
       const certs = await ethcalate.createOpeningCerts(virtualChannel, true)
       console.log('Ingrid created certs after finding other certs: ', certs)
 
-      // TODO send certs to DB
+      await ethcalate.sendOpeningCerts(id, certs)
 
       clearInterval(intervalId)
     }
