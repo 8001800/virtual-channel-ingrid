@@ -32,7 +32,7 @@ app.get('/hello', function (req, res) {
 app.set('trust proxy', true)
 app.set('trust proxy', 'loopback')
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 4000
 const server = app.listen(port, async () => {
   const host = server.address().address
   const port = server.address().port
