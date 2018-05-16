@@ -28,7 +28,11 @@ module.exports = virtualChannel => {
       }
     })
     if (found.agentA && found.agentB && found.ingrid) {
-      await ethcalate.sendOpeningCerts(virtualChannel)
+      const certs = await ethcalate.createOpeningCerts(virtualChannel, true)
+      console.log('Ingrid created certs after finding other certs: ', certs)
+
+      // TODO send certs to DB
+
       clearInterval(intervalId)
     }
   }, 5000)
