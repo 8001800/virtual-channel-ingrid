@@ -1,6 +1,4 @@
-const { getChannelManager, getWeb3 } = require('../web3')
-const { getModels } = require('../models')
-const Ethcalate = require('../../ethcalate-client/src')
+const { getChannelManager, getWeb3, getEthcalate } = require('../web3')
 
 async function processChannelOpen (
   { channelId, agentB, tokenContract, depositA },
@@ -29,11 +27,7 @@ async function processChannelOpen (
 module.exports = async contractAddress => {
   const web3 = getWeb3()
   const channelManager = getChannelManager()
-  const ethcalate = new Ethcalate(
-    web3,
-    contractAddress,
-    'http://localhost:3000'
-  )
+  const ethcalate = getEthcalate()
   await ethcalate.initContract()
 
   channelManager.events.allEvents(async (err, event) => {
