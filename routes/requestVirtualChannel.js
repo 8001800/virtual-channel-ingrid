@@ -2,7 +2,6 @@ const { asyncRequest } = require('../util')
 const { param, validationResult } = require('express-validator/check')
 const { matchedData } = require('express-validator/filter')
 const { getModels } = require('../models')
-const { getEthcalate } = require('../web3')
 const pollVc = require('../helpers/pollForVcOpeningCerts')
 
 const validator = [param('id').exists()]
