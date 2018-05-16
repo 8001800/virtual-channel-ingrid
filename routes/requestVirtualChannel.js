@@ -3,6 +3,7 @@ const { param, validationResult } = require('express-validator/check')
 const { matchedData } = require('express-validator/filter')
 const { getModels } = require('../models')
 const { getEthcalate } = require('../web3')
+const pollVc = require('../helpers/pollForVcOpeningCerts')
 
 const validator = [param('id').exists()]
 
@@ -22,9 +23,7 @@ const handler = async (req, res, next) => {
     })
   }
 
-  const ethcalate = getEthcalate()
-  const certs = await ethcalate.createOpeningCerts(vc, true)
-  console.log('certs: ', certs)
+  pollVc(vc)
 
   res.status(200).json({
     message: 'Request received, polling for opening certs'
