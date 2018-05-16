@@ -1,25 +1,36 @@
 const { getModels } = require('../models')
 const { getEthcalate } = require('../web3')
 
-module.exports = virtualChannel => {
+const TOTAL_POLLING_TIME = 3600 * 1000
+const POLLING_FREQUENCY = 5 * 1000
+// const NUM_POLLING_INTERVALS = TOTAL_POLLING_TIME / POLLING_FREQUENCY
+const NUM_POLLING_INTERVALS = 1
+
+module.exports = async virtualChannel => {
   const { id, agentA, agentB, ingrid } = virtualChannel
   const { Certificate } = getModels()
   const ethcalate = getEthcalate()
-  console.log('Checking database for opening certs')
+
   const found = {
     agentA: false,
     agentB: false,
     ingrid: false
   }
+  let counter = 0
   const intervalId = setInterval(async () => {
+    console.log('Checking database for opening certs')
     const certs = await Certificate.findAll({
       where: {
         virtualchannelId: id
       }
     })
-    const addresses = certs.forEach(cert => {
-      console.log(`Found opening certs from ${addresses}`)
-      switch (cert.from) {
+    certs.forEach(cert => {
+      console.log(`Found opening certs from ${cert.from}`)
+      const signer = ethcalate.recoverSignerFromOpeningCerts(
+        cert.sig,
+        virtualChannel
+      )
+      switch (signer) {
         case agentA:
         case agentB:
         case ingrid:
@@ -35,5 +46,10 @@ module.exports = virtualChannel => {
 
       clearInterval(intervalId)
     }
+    if (counter > NUM_POLLING_INTERVALS) {
+      console.log('Could not find opening certs within total polling time.')
+      clearInterval(intervalId)
+    }
+    counter++
   }, 5000)
 }
