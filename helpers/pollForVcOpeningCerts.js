@@ -12,8 +12,8 @@ module.exports = async virtualChannel => {
   const ethcalate = getEthcalate()
 
   const found = {
-    agentA: false,
-    agentB: false
+    [agentA]: false,
+    [agentB]: false
   }
   let counter = 0
   const intervalId = setInterval(async () => {
@@ -37,7 +37,7 @@ module.exports = async virtualChannel => {
           break
       }
     })
-    if (found.agentA && found.agentB) {
+    if (found[agentA] && found[agentB]) {
       const certs = await ethcalate.createOpeningCerts(virtualChannel, true)
       console.log('Ingrid created certs after finding other certs: ', certs)
 
