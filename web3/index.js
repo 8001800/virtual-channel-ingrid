@@ -1,6 +1,6 @@
 const Web3 = require('web3')
 const artifacts = require('../artifacts/ChannelManager.json')
-const Ethcalate = require('../../ethcalate-client/src')
+const Ethcalate = require('../../ethcalate-testing/src/src')
 
 let web3, channelManager, ethcalate
 
