@@ -16,10 +16,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM('opening', 'closing'),
         allowNull: false
       },
-      data: {
-        type: DataTypes.TEXT,
-        allowNull: false
-      },
       sig: {
         type: DataTypes.TEXT,
         allowNull: false
