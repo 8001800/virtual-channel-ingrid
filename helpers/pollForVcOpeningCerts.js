@@ -4,8 +4,7 @@ const { getEthcalate } = require('../web3')
 
 const TOTAL_POLLING_TIME = 3600 * 1000
 const POLLING_FREQUENCY = 5 * 1000
-// const NUM_POLLING_INTERVALS = TOTAL_POLLING_TIME / POLLING_FREQUENCY
-const NUM_POLLING_INTERVALS = 1
+const NUM_POLLING_INTERVALS = TOTAL_POLLING_TIME / POLLING_FREQUENCY
 
 module.exports = async virtualChannel => {
   const { id, agentA, agentB } = virtualChannel
