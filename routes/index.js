@@ -7,7 +7,7 @@ module.exports = app => {
 
   // virtual channel
   app
-    .route('/virtualchannel/:id')
+    .route('/virtualchannel/id/:id/open')
     .post(requestVirtualChannel.validator)
     .post(requestVirtualChannel.handler)
 }
