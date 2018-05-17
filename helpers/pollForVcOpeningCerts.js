@@ -28,38 +28,37 @@ module.exports = async virtualChannel => {
     // recover signer and make sure both agents submitted signed certs
     certs.forEach(cert => {
       console.log(`Found opening certs from ${cert.from}`)
-      let signer
+      let sigParams
       switch (cert.from) {
         case agentA:
-          signer = Ethcalate.recoverSignerFromOpeningCerts(cert.sig, {
+          sigParams = {
             id,
             agentA,
             agentB,
             ingrid,
             participantType: 'agentA',
             depositInWei: depositA
-          })
-          if (signer === agentA) {
-            found[signer] = true
-          } else {
-            console.log(`Invalid cert signature: ${cert.id}`)
           }
           break
         case agentB:
-          signer = Ethcalate.recoverSignerFromOpeningCerts(cert.sig, {
+          sigParams = {
             id,
             agentA,
             agentB,
             ingrid,
             participantType: 'agentB',
             depositInWei: depositB
-          })
-          if (signer === agentB) {
-            found[signer] = true
-          } else {
-            console.log(`Invalid cert signature: ${cert.id}`)
           }
           break
+      }
+      const signer = Ethcalate.recoverSignerFromOpeningCerts(
+        cert.sig,
+        sigParams
+      )
+      if (signer === cert.from) {
+        found[signer] = true
+      } else {
+        console.log(`Found invalid cert id: ${cert.id}`)
       }
     })
     if (found[agentA] && found[agentB]) {
@@ -77,6 +76,7 @@ module.exports = async virtualChannel => {
       console.log('Ingrid created certs after finding other certs: ', certs)
       clearInterval(intervalId)
       await ethcalate.sendOpeningCerts(id, certs)
+      await ethcalate.updateVirtualChannelStatus({ id, status: 'opened' })
     }
     if (counter >= NUM_POLLING_INTERVALS) {
       console.log('Could not find opening certs within total polling time.')
