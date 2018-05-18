@@ -2,7 +2,7 @@ const { asyncRequest } = require('../util')
 const { param, validationResult } = require('express-validator/check')
 const { matchedData } = require('express-validator/filter')
 const { getModels } = require('../models')
-const pollVc = require('../helpers/pollForVcOpeningCerts')
+const sendIngridOpeningCerts = require('../helpers/sendIngridOpeningCerts')
 
 const validator = [param('id').exists()]
 
@@ -22,10 +22,15 @@ const handler = async (req, res, next) => {
     })
   }
 
-  pollVc(vc)
+  if (!sendIngridOpeningCerts(vc)) {
+    return res.status(400).json({
+      message: `Problem with opening certs`
+    })
+  }
 
   res.status(200).json({
-    message: 'Request received, polling for opening certs'
+    message:
+      'Found certs and sent Ingrid opening cert, virtual channel is Opened'
   })
 }
 
