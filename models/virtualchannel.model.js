@@ -21,14 +21,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 0
       },
-      balanceA: {
-        type: DataTypes.TEXT,
-        allowNull: true
-      },
-      balanceB: {
-        type: DataTypes.TEXT,
-        allowNull: true
-      },
       agentA: {
         type: DataTypes.TEXT,
         allowNull: false
