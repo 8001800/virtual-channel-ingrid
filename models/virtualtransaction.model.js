@@ -12,10 +12,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false
       },
-      hash: {
-        type: DataTypes.STRING,
-        allowNull: true
-      },
       sigA: {
         type: DataTypes.TEXT,
         allowNull: true
@@ -35,10 +31,6 @@ module.exports = (sequelize, DataTypes) => {
       nonce: {
         type: DataTypes.INTEGER,
         allowNull: false
-      },
-      currentState: {
-        type: DataTypes.STRING,
-        allowNull: true
       }
     },
     {
