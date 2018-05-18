@@ -49,4 +49,24 @@ module.exports = async contractAddress => {
         break
     }
   })
+
+  channelManager
+    .getPastEvents('allEvents', { fromBlock: 0 })
+    .then(async events => {
+      events.map(async event => {
+        const channelAttributes = {
+          ...event.returnValues
+        }
+        switch (event.event) {
+          case 'ChannelOpen':
+            console.log('caught ChannelOpen', channelAttributes)
+            await processChannelOpen(
+              channelAttributes,
+              ethcalate,
+              web3.eth.defaultAccount
+            )
+            break
+        }
+      })
+    })
 }
