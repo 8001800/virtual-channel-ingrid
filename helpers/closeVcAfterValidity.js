@@ -1,13 +1,8 @@
-const { Op } = require('sequelize')
-const { getModels } = require('../models')
-const Ethcalate = require('../../ethcalate-testing/src/src')
 const { getEthcalate, getWeb3 } = require('../web3')
 
 module.exports = virtualChannel => {
   let {
     id,
-    agentA,
-    agentB,
     validity,
     depositA,
     depositB,
