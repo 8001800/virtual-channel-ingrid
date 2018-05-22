@@ -48,7 +48,7 @@ const server = app.listen(port, async () => {
   await connectDb()
   await initWeb3()
   await initChannelManager()
-  const channelManagerAddress = getChannelManager().options.address
+  const channelManagerAddress = getChannelManager().options.address.toLowerCase()
   console.log('channelManagerAddress: ', channelManagerAddress)
   await initEthcalate(channelManagerAddress)
   await channelListener(channelManagerAddress)
