@@ -4,6 +4,7 @@ const decomposeToLedger = require('./decomposeToLedger')
 module.exports = virtualChannel => {
   let { id, validity, depositA, depositB } = virtualChannel
   const ethcalate = getEthcalate()
+  validity = parseInt(validity)
 
   setTimeout(async () => {
     const vc = await ethcalate.getLatestVirtualStateUpdate(id, ['sigA', 'sigB'])
