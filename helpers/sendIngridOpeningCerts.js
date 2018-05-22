@@ -71,6 +71,7 @@ module.exports = async virtualChannel => {
     await ethcalate.updateVirtualChannelStatus({ id, status: 'opened' })
     return true
   } else {
+    await ethcalate.checkVcOpeningCerts(virtualChannel)
     return false
   }
 }
