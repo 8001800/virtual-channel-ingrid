@@ -4,10 +4,13 @@ console.log(
   `Connecting to db at ${process.env.RDS_HOSTNAME}, using ${process.env.RDS_USERNAME}:${process.env.RDS_PASSWORD}, table name: ${process.env.RDS_DB_NAME}`
 )
 
-let sequelize
-let User
-let Transaction
-let Channel
+let sequelize,
+  User,
+  Transaction,
+  Channel,
+  VirtualChannel,
+  Certificate,
+  VirtualTransaction
 
 module.exports.connectDb = async () => {
   sequelize = new Sequelize(
@@ -23,11 +26,7 @@ module.exports.connectDb = async () => {
         min: 0,
         idle: 10000
       },
-      port: 5432,
-      dialectOptions: {
-        ssl: process.env.DB_SSL,
-        sslrootcert: 'rds-combined-ca-bundle.pem'
-      }
+      port: 5432
     }
   )
   await sequelize.authenticate()
@@ -37,16 +36,26 @@ module.exports.connectDb = async () => {
   User = sequelize.import('../models/user.model.js')
   Transaction = sequelize.import('../models/transaction.model.js')
   Channel = sequelize.import('../models/channel.model.js')
+  VirtualChannel = sequelize.import('../models/virtualchannel.model.js')
+  VirtualTransaction = sequelize.import('../models/virtualtransaction.model.js')
+  Certificate = sequelize.import('../models/certificate.model.js')
 
   if (process.env.INIT_DB) {
     await User.sync({ force: true })
     await Transaction.sync({ force: true })
     await Channel.sync({ force: true })
+    await VirtualChannel.sync({ force: true })
+    await VirtualTransaction.sync({ force: true })
+    await Certificate.sync({ force: true })
   }
 
   // relations
   Transaction.belongsTo(Channel)
   Channel.hasMany(Transaction)
+  Certificate.belongsTo(VirtualChannel)
+  VirtualTransaction.belongsTo(VirtualChannel)
+  VirtualChannel.hasMany(Certificate)
+  VirtualChannel.hasMany(VirtualTransaction)
 }
 
 module.exports.getDb = () => {
@@ -60,6 +69,9 @@ module.exports.getModels = () => {
   return {
     User,
     Transaction,
-    Channel
+    Channel,
+    VirtualChannel,
+    Certificate,
+    VirtualTransaction
   }
 }

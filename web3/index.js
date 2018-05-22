@@ -1,8 +1,8 @@
 const Web3 = require('web3')
 const artifacts = require('../artifacts/ChannelManager.json')
+const Ethcalate = require('../../ethcalate-testing/src/src')
 
-let web3
-let channelManager
+let web3, channelManager, ethcalate
 
 module.exports.initWeb3 = async () => {
   let accountAddress
@@ -69,6 +69,23 @@ module.exports.initChannelManager = async channelManagerAddress => {
         throw new Error('No contract address specified')
       }
     }
+  }
+}
+
+module.exports.initEthcalate = async channelManagerAddress => {
+  ethcalate = new Ethcalate(
+    web3,
+    channelManagerAddress,
+    'http://localhost:3000'
+  )
+  await ethcalate.initContract()
+}
+
+module.exports.getEthcalate = () => {
+  if (!ethcalate) {
+    throw new Error('Problem initializing Ethcalate')
+  } else {
+    return ethcalate
   }
 }
 

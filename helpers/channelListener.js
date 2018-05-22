@@ -1,9 +1,7 @@
-const { getChannelManager, getWeb3 } = require('../web3')
-const { getModels } = require('../models')
-const Ethcalate = require('../../ethcalate-client/src')
+const { getChannelManager, getWeb3, getEthcalate } = require('../web3')
 
 async function processChannelOpen (
-  { channelId, agentA, agentB, tokenContract, depositA, challenge },
+  { channelId, agentB, tokenContract, depositA },
   ethcalate,
   defaultAccount
 ) {
@@ -16,7 +14,7 @@ async function processChannelOpen (
         await ethcalate.joinChannel({
           channelId,
           tokenContract: null,
-          depositInWei: '0'
+          depositInWei: depositA
         })
         console.log(`Joined channel ${channelId} as Ingrid`)
       } catch (e) {
@@ -29,11 +27,7 @@ async function processChannelOpen (
 module.exports = async contractAddress => {
   const web3 = getWeb3()
   const channelManager = getChannelManager()
-  const ethcalate = new Ethcalate(
-    web3,
-    contractAddress,
-    'http://localhost:3000'
-  )
+  const ethcalate = getEthcalate()
   await ethcalate.initContract()
 
   channelManager.events.allEvents(async (err, event) => {
@@ -55,4 +49,24 @@ module.exports = async contractAddress => {
         break
     }
   })
+
+  channelManager
+    .getPastEvents('allEvents', { fromBlock: 0 })
+    .then(async events => {
+      events.map(async event => {
+        const channelAttributes = {
+          ...event.returnValues
+        }
+        switch (event.event) {
+          case 'ChannelOpen':
+            console.log('caught ChannelOpen', channelAttributes)
+            await processChannelOpen(
+              channelAttributes,
+              ethcalate,
+              web3.eth.defaultAccount
+            )
+            break
+        }
+      })
+    })
 }
