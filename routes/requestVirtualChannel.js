@@ -25,7 +25,7 @@ const handler = async (req, res, next) => {
 
   if (!sendIngridOpeningCerts(vc)) {
     return res.status(400).json({
-      message: `Problem with opening certs`
+      message: `Problem with opening certs, channel will be set to NotOpened after delta`
     })
   }
 
