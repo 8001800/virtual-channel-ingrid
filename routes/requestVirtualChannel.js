@@ -32,8 +32,7 @@ const handler = async (req, res, next) => {
   closeVcAfterValidity(vc)
 
   res.status(200).json({
-    message:
-      'Found certs and sent Ingrid opening cert, virtual channel is Opened'
+    message: 'Found certs and sent Ingrid opening cert, virtual channel is Opened'
   })
 }
 

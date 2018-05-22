@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false
       },
+      ingridSig: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
       from: {
         type: DataTypes.TEXT,
         allowNull: false
