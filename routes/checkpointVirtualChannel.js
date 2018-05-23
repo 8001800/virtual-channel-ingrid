@@ -22,14 +22,21 @@ const handler = async (req, res, next) => {
     })
   }
   const { virtualtransactions } = vc.channel
-  let finalBalanceA, finalBalanceB
   if (virtualtransactions) {
     // make sure tx is valid
-    const { balanceA, balanceB } = virtualtransactions[0]
+    const { balanceA, balanceB, nonce } = virtualtransactions[0]
     // valid double signed tx to close with
-    finalBalanceA = balanceA
-    finalBalanceB = balanceB
     // TODO handle error case?
+
+    await decomposeToLedger(vc.channel, {
+      virtualBalanceA: balanceA,
+      virtualBalanceB: balanceB,
+      nonce
+    })
+
+    res.status(200).json({
+      message: 'Ingrid sent ledger update for each subchannel.'
+    })
   } else {
     // final balances are deposits
     return res.status(400).json({
@@ -37,15 +44,6 @@ const handler = async (req, res, next) => {
         'No double signed update exists for channel, nothing to checkpoint'
     })
   }
-
-  await decomposeToLedger(vc.channel, {
-    virtualBalanceA: finalBalanceA,
-    virtualBalanceB: finalBalanceB
-  })
-
-  res.status(200).json({
-    message: 'Ingrid sent ledger update for each subchannel.'
-  })
 }
 
 module.exports.validator = validator

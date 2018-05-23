@@ -1,13 +1,32 @@
 const { getEthcalate, getWeb3 } = require('../web3')
+const { getModels } = require('../models')
 
 module.exports = async (
   virtualChannel,
-  { virtualBalanceA, virtualBalanceB }
+  { virtualBalanceA, virtualBalanceB, nonce }
 ) => {
-  let { id, depositA, depositB, subchanAtoI, subchanBtoI } = virtualChannel
+  let {
+    id,
+    depositA,
+    depositB,
+    subchanAtoI,
+    subchanBtoI,
+    checkpointedNonce
+  } = virtualChannel
 
   const ethcalate = getEthcalate()
   const web3 = getWeb3()
+  const { VirtualChannel, VirtualTransaction } = getModels()
+  if (checkpointedNonce > 0) {
+    const { balanceA, balanceB } = await VirtualTransaction.findOne({
+      where: {
+        virtualchannelId: id,
+        nonce: checkpointedNonce
+      }
+    })
+    depositA = balanceA
+    depositB = balanceB
+  }
 
   const [
     { channel: ledgerChannelAtoI },
@@ -118,4 +137,8 @@ module.exports = async (
     },
     true
   )
+
+  const vc = await VirtualChannel.findById(id)
+  vc.checkpointedNonce = nonce
+  await vc.save()
 }
