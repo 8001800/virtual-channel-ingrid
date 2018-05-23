@@ -4,7 +4,7 @@ module.exports = async (
   virtualChannel,
   { virtualBalanceA, virtualBalanceB }
 ) => {
-  let { depositA, depositB, subchanAtoI, subchanBtoI } = virtualChannel
+  let { id, depositA, depositB, subchanAtoI, subchanBtoI } = virtualChannel
 
   const ethcalate = getEthcalate()
   const web3 = getWeb3()
@@ -94,8 +94,8 @@ module.exports = async (
       // ledger balance A = ledgerbalance + (virtualbalance - virtualdeposit)
       // ledger balance B = ledgerbalance - (virtualbalance - virtualdeposit)
       amtToTransfer = virtualBalanceB.sub(depositB)
-      ledgerBalanceB = ledgerBalanceB.sub(amtToTransfer)
-      ledgerBalanceIB = ledgerBalanceIB.add(amtToTransfer)
+      ledgerBalanceB = ledgerBalanceB.add(amtToTransfer)
+      ledgerBalanceIB = ledgerBalanceIB.sub(amtToTransfer)
       break
   }
 
@@ -103,7 +103,8 @@ module.exports = async (
     {
       channelId: subchanAtoI,
       balanceA: ledgerBalanceA.toString(),
-      balanceB: ledgerBalanceIA.toString()
+      balanceB: ledgerBalanceIA.toString(),
+      virtualchannelId: id
     },
     true
   )
@@ -112,7 +113,8 @@ module.exports = async (
     {
       channelId: subchanBtoI,
       balanceA: ledgerBalanceB.toString(),
-      balanceB: ledgerBalanceIB.toString()
+      balanceB: ledgerBalanceIB.toString(),
+      virtualchannelId: id
     },
     true
   )

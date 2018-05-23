@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false
       },
+      virtualchannelId: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
       hash: {
         type: DataTypes.STRING,
         allowNull: true
