@@ -11,12 +11,17 @@ async function processChannelOpen (
     )
     if (!tokenContract || parseInt(tokenContract) === 0) {
       try {
-        await ethcalate.joinChannel({
-          channelId,
-          tokenContract: null,
-          depositInWei: depositA
-        })
-        console.log(`Joined channel ${channelId} as Ingrid`)
+        const { channel } = await ethcalate.getLedgerChannel(channelId)
+        if (channel.status === 'opened') {
+          await ethcalate.joinChannel({
+            channelId,
+            tokenContract: null,
+            depositInWei: depositA
+          })
+          console.log(`Joined channel ${channelId} as Ingrid`)
+        } else {
+          console.log(`Found channel with status ${channel.status}`)
+        }
       } catch (e) {
         console.error(e)
       }
