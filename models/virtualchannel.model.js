@@ -45,10 +45,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false
       },
+      closingTimeSeconds: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
       status: {
         type: DataTypes.ENUM(
           'Opening',
           'Opened',
+          'NotOpened',
           'Empty',
           'Closing',
           'WaitingToClose',
@@ -60,6 +65,16 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 'Opening'
       },
       latestNonce: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+      },
+      deltaStartTimeSeconds: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+      },
+      checkpointedNonce: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0

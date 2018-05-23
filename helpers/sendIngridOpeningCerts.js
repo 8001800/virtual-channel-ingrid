@@ -3,9 +3,22 @@ const Ethcalate = require('../../ethcalate-testing/src/src')
 const { getEthcalate } = require('../web3')
 
 module.exports = async virtualChannel => {
-  const { id, agentA, agentB, ingrid, depositA, depositB } = virtualChannel
+  const {
+    id,
+    agentA,
+    agentB,
+    ingrid,
+    depositA,
+    depositB,
+    subchanAtoI,
+    subchanBtoI,
+    closingTimeSeconds
+  } = virtualChannel
   const { Certificate } = getModels()
   const ethcalate = getEthcalate()
+
+  console.log('subchanAtoI: ', subchanAtoI)
+  console.log('subchanBtoI: ', subchanBtoI)
 
   const found = {
     [agentA]: false,
@@ -29,7 +42,10 @@ module.exports = async virtualChannel => {
           agentB,
           ingrid,
           participantType: 'agentA',
-          depositInWei: depositA
+          depositInWei: depositA,
+          subchanAtoI,
+          subchanBtoI,
+          closingTimeSeconds
         }
         break
       case agentB:
@@ -39,17 +55,26 @@ module.exports = async virtualChannel => {
           agentB,
           ingrid,
           participantType: 'agentB',
-          depositInWei: depositB
+          depositInWei: depositB,
+          subchanAtoI,
+          subchanBtoI,
+          closingTimeSeconds
         }
         break
     }
-    const signer = Ethcalate.recoverSignerFromOpeningCerts(cert.sig, sigParams)
-    if (signer === cert.from) {
-      found[signer] = true
-    } else {
-      console.log(
-        `Found invalid cert id: ${cert.id}, signer: ${signer}, cert.from: ${cert.from}`
+    console.log('sigParams: ', sigParams)
+    if (sigParams) {
+      const signer = Ethcalate.recoverSignerFromOpeningCerts(
+        cert.sig,
+        sigParams
       )
+      if (signer === cert.from) {
+        found[signer] = true
+      } else {
+        console.log(
+          `Found invalid cert id: ${cert.id}, signer: ${signer}, cert.from: ${cert.from}`
+        )
+      }
     }
   })
   if (found[agentA] && found[agentB]) {
