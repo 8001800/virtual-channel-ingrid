@@ -72,45 +72,44 @@ module.exports = async virtualChannel => {
         found[signer] = true
       } else {
         console.log(
-          `Found invalid cert id: ${cert.id}, signer: ${signer}, cert.from: ${
-            cert.from
-          }`
+          `Found invalid cert id: ${cert.id}, signer: ${signer}, cert.from: ${cert.from}`
         )
       }
     }
   })
   if (found[agentA] && found[agentB]) {
     // has both certs, cosigns opening certs
-    // const cosigned = await ethcalate.cosignOpeningCert({
-    //   certID: cert.id,
-    //   vcID: id
-    // })
-    const cosigned = true // remove once ^^ works
-    if (cosigned) {
-      // I successfully cosigned certificate
-      // generate opening certs
-      const certs = await ethcalate.createOpeningCerts(
-        {
-          id,
-          agentA,
-          agentB,
-          ingrid,
-          depositInWei: '0',
-          participantType: 'ingrid',
-          subchanAtoI,
-          subchanBtoI,
-          closingTimeSeconds
-        },
-        true
-      )
-      console.log('Ingrid created certs after finding other certs: ', certs)
-      await ethcalate.sendOpeningCerts(id, certs)
-      await ethcalate.updateVirtualChannelStatus({ id, status: 'opened' })
-      return true
-    } else {
+    try {
+      await ethcalate.cosignOpeningCerts({
+        certA: cert[0].from === agentA ? certs[0].sig : certs[1].sig,
+        certB: cert[0].from === agentA ? certs[1].sig : certs[0].sig,
+        id
+      })
+    } catch (e) {
       console.log('Ingrid did not successfully sign opening certs.')
       return false
     }
+
+    // I successfully cosigned certificate
+    // generate opening certs
+    const certs = await ethcalate.createOpeningCerts(
+      {
+        id,
+        agentA,
+        agentB,
+        ingrid,
+        depositInWei: '0',
+        participantType: 'ingrid'
+      },
+      true
+    )
+    console.log(
+      'Ingrid created certs after finding and signing other certs: ',
+      certs
+    )
+    await ethcalate.sendOpeningCerts(id, certs)
+    await ethcalate.updateVirtualChannelStatus({ id, status: 'opened' })
+    return true
   } else {
     await ethcalate.checkVcOpeningCerts(virtualChannel)
     return false
