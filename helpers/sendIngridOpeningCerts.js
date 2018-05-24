@@ -72,7 +72,9 @@ module.exports = async virtualChannel => {
         found[signer] = true
       } else {
         console.log(
-          `Found invalid cert id: ${cert.id}, signer: ${signer}, cert.from: ${cert.from}`
+          `Found invalid cert id: ${cert.id}, signer: ${signer}, cert.from: ${
+            cert.from
+          }`
         )
       }
     }
@@ -81,8 +83,8 @@ module.exports = async virtualChannel => {
     // has both certs, cosigns opening certs
     try {
       await ethcalate.cosignOpeningCerts({
-        certA: cert[0].from === agentA ? certs[0].sig : certs[1].sig,
-        certB: cert[0].from === agentA ? certs[1].sig : certs[0].sig,
+        certA: certs[0].from === agentA ? certs[0].sig : certs[1].sig,
+        certB: certs[0].from === agentA ? certs[1].sig : certs[0].sig,
         id
       })
     } catch (e) {
@@ -92,22 +94,25 @@ module.exports = async virtualChannel => {
 
     // I successfully cosigned certificate
     // generate opening certs
-    const certs = await ethcalate.createOpeningCerts(
+    const ingridCerts = await ethcalate.createOpeningCerts(
       {
         id,
         agentA,
         agentB,
         ingrid,
         depositInWei: '0',
-        participantType: 'ingrid'
+        participantType: 'ingrid',
+        subchanAtoI,
+        subchanBtoI,
+        closingTimeSeconds
       },
       true
     )
     console.log(
       'Ingrid created certs after finding and signing other certs: ',
-      certs
+      ingridCerts
     )
-    await ethcalate.sendOpeningCerts(id, certs)
+    await ethcalate.sendOpeningCerts(id, ingridCerts)
     await ethcalate.updateVirtualChannelStatus({ id, status: 'opened' })
     return true
   } else {
