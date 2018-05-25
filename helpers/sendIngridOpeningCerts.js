@@ -17,9 +17,6 @@ module.exports = async virtualChannel => {
   const { Certificate } = getModels()
   const ethcalate = getEthcalate()
 
-  console.log('subchanAtoI: ', subchanAtoI)
-  console.log('subchanBtoI: ', subchanBtoI)
-
   const found = {
     [agentA]: false,
     [agentB]: false
@@ -82,6 +79,7 @@ module.exports = async virtualChannel => {
   if (found[agentA] && found[agentB]) {
     // has both certs, cosigns opening certs
     try {
+      console.log(typeof id)
       await ethcalate.cosignOpeningCerts({
         certA: certs[0].from === agentA ? certs[0].sig : certs[1].sig,
         certB: certs[0].from === agentA ? certs[1].sig : certs[0].sig,

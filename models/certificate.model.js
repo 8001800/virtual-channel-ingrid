@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       virtualchannelId: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         allowNull: false
       },
       type: {

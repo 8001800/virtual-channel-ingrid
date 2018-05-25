@@ -12,7 +12,8 @@ const handler = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.mapped() })
   }
-  const { id } = matchedData(req)
+  let { id } = matchedData(req)
+  id = parseInt(id)
 
   const { VirtualChannel } = getModels()
 
@@ -23,7 +24,7 @@ const handler = async (req, res, next) => {
     })
   }
 
-  if (!sendIngridOpeningCerts(vc)) {
+  if (!(await sendIngridOpeningCerts(vc))) {
     return res.status(400).json({
       message: `Problem with opening certs, channel will be set to NotOpened after delta`
     })
@@ -32,7 +33,8 @@ const handler = async (req, res, next) => {
   closeVcAfterValidity(vc)
 
   res.status(200).json({
-    message: 'Found certs and sent Ingrid opening cert, virtual channel is Opened'
+    message:
+      'Found certs and sent Ingrid opening cert, virtual channel is Opened'
   })
 }
 

@@ -3,9 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     'virtualchannels',
     {
       id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4,
         allowNull: false
       },
       tokenContract: {
