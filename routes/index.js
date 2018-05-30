@@ -2,6 +2,7 @@ const test = require('./test')
 const requestVirtualChannel = require('./requestVirtualChannel')
 const checkpointVirtualChannel = require('./checkpointVirtualChannel')
 const vcCloseInit = require('./vcCloseInit')
+const vcCloseFinal = require('./vcCloseFinal')
 
 module.exports = app => {
   // test
@@ -22,4 +23,9 @@ module.exports = app => {
     .route('/virtualchannel/id/:id/vccloseinit')
     .post(vcCloseInit.validator)
     .post(vcCloseInit.handler)
+
+  app
+    .route('/virtualchannel/id/:id/vcclosefinal')
+    .post(vcCloseFinal.validator)
+    .post(vcCloseFinal.handler)
 }
