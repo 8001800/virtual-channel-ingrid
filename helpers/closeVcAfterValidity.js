@@ -1,4 +1,5 @@
 const { getEthcalate } = require('../web3')
+const { getModels } = require('../models')
 const decomposeToLedger = require('./decomposeToLedger')
 
 module.exports = virtualChannel => {
@@ -7,8 +8,11 @@ module.exports = virtualChannel => {
   validity = parseInt(validity)
 
   setTimeout(async () => {
-    const vc = await ethcalate.getLatestVirtualStateUpdate(id, ['sigA', 'sigB'])
-    const { virtualtransactions } = vc
+    const vcState = await ethcalate.getLatestVirtualStateUpdate(id, [
+      'sigA',
+      'sigB'
+    ])
+    const { virtualtransactions } = vcState
     let finalBalanceA, finalBalanceB
     let nonce = 0
     if (virtualtransactions) {
@@ -30,5 +34,10 @@ module.exports = virtualChannel => {
       virtualBalanceB: finalBalanceB,
       nonce
     })
+    // update vc status to closed
+    const { VirtualChannel } = getModels()
+    const vc = await VirtualChannel.findById(id)
+    vc.status = 'Closed'
+    await vc.save()
   }, validity * 1000)
 }
