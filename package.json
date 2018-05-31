@@ -25,6 +25,7 @@
     "eslint": "^4.19.1",
     "express": "^4.16.3",
     "express-validator": "^5.0.3",
+    "human-standard-token-abi": "^1.0.2",
     "pg": "^7.4.1",
     "sequelize": "^4.37.4",
     "truffle-contract": "^3.0.4",

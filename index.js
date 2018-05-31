@@ -9,7 +9,6 @@ const {
   initEthcalate
 } = require('./web3')
 const { connectDb } = require('./models')
-const channelListener = require('./helpers/channelListener')
 const setupRoutes = require('./routes')
 
 // express instance
@@ -51,7 +50,6 @@ const server = app.listen(port, async () => {
   const channelManagerAddress = getChannelManager().options.address.toLowerCase()
   console.log('channelManagerAddress: ', channelManagerAddress)
   await initEthcalate(channelManagerAddress)
-  await channelListener(channelManagerAddress)
 })
 if (process.env.ENVIRONMENT === 'DEV') {
   console.log('Running in DEV mode.')
