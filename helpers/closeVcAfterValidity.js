@@ -10,12 +10,14 @@ module.exports = virtualChannel => {
     const vc = await ethcalate.getLatestVirtualStateUpdate(id, ['sigA', 'sigB'])
     const { virtualtransactions } = vc
     let finalBalanceA, finalBalanceB
+    let nonce = 0
     if (virtualtransactions) {
       // make sure tx is valid
-      const { balanceA, balanceB } = virtualtransactions[0]
+      const { balanceA, balanceB, nonce: vtNonce } = virtualtransactions[0]
       // valid double signed tx to close with
       finalBalanceA = balanceA
       finalBalanceB = balanceB
+      nonce = vtNonce
       // TODO handle error case?
     } else {
       // final balances are deposits
@@ -25,7 +27,8 @@ module.exports = virtualChannel => {
 
     await decomposeToLedger(virtualChannel, {
       virtualBalanceA: finalBalanceA,
-      virtualBalanceB: finalBalanceB
+      virtualBalanceB: finalBalanceB,
+      nonce
     })
   }, validity * 1000)
 }
