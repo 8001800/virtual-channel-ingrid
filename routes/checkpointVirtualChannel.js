@@ -9,7 +9,7 @@ const validator = [param('id').exists()]
 const handler = async (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.mapped() })
+    return res.status(422).json({ status: 'error', errors: errors.mapped() })
   }
   const { id } = matchedData(req)
 
@@ -18,7 +18,8 @@ const handler = async (req, res, next) => {
   const vc = await ethcalate.getLatestVirtualStateUpdate(id, ['sigA', 'sigB'])
   if (!vc.channel) {
     return res.status(404).json({
-      message: 'Could not find channel'
+      status: 'error',
+      message: 'Could not find channel.'
     })
   }
   const { virtualtransactions } = vc.channel
@@ -35,11 +36,13 @@ const handler = async (req, res, next) => {
     })
 
     res.status(200).json({
+      status: 'success',
       message: 'Ingrid sent ledger update for each subchannel.'
     })
   } else {
     // final balances are deposits
     return res.status(400).json({
+      status: 'error',
       message:
         'No double signed update exists for channel, nothing to checkpoint'
     })

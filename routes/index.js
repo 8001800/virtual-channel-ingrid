@@ -12,32 +12,32 @@ module.exports = app => {
 
   // virtual channel
   app
-    .route('/virtualchannel/id/:id/open')
+    .route('/virtualchannel/:id/open')
     .post(requestVirtualChannel.validator)
     .post(requestVirtualChannel.handler)
 
   app
-    .route('/virtualchannel/id/:id/checkpoint')
+    .route('/virtualchannel/:id/checkpoint')
     .post(checkpointVirtualChannel.validator)
     .post(checkpointVirtualChannel.handler)
 
   app
-    .route('/virtualchannel/id/:id/vccloseinit')
+    .route('/virtualchannel/:id/vccloseinit')
     .post(vcCloseInit.validator)
     .post(vcCloseInit.handler)
 
   app
-    .route('/virtualchannel/id/:id/vcclosefinal')
+    .route('/virtualchannel/:id/vcclosefinal')
     .post(vcCloseFinal.validator)
     .post(vcCloseFinal.handler)
 
   app
-    .route('/virtualchannel/id/:id/vcclosefinaltimeout')
+    .route('/virtualchannel/:id/vcclosefinaltimeout')
     .post(vcCloseFinalTimeout.validator)
     .post(vcCloseFinalTimeout.handler)
 
   app
-    .route('/ledgerchannel/id/:id/join')
+    .route('/ledgerchannel/:id/join')
     .post(joinLedgerChannel.validator)
     .post(joinLedgerChannel.handler)
 }

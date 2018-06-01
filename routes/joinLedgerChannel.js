@@ -9,27 +9,27 @@ const validator = [param('id').exists()]
 const handler = async (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.mapped() })
+    return res.status(422).json({ status: 'error', errors: errors.mapped() })
   }
   let { id } = matchedData(req)
 
   const ethcalate = getEthcalate()
   const web3 = getWeb3()
 
-  const { channel } = await ethcalate.getLedgerChannel(id)
+  const channel = await ethcalate.getLedgerChannel(id)
   console.log('channel: ', channel)
 
   if (!channel) {
     return res.status(404).json({
-      message: 'Channel not found.',
-      id
+      status: 'error',
+      message: 'Channel not found.'
     })
   }
 
   if (channel.status !== 'open') {
     return res.status(400).json({
-      message: 'Channel status is not "open".',
-      id
+      status: 'error',
+      message: 'Channel status is not "open".'
     })
   }
 
@@ -38,7 +38,7 @@ const handler = async (req, res, next) => {
   if (channel.agentB !== accounts[0].toLowerCase()) {
     return res.status(400).json({
       message: 'Ingrid is not part of this channel.',
-      id
+      status: 'error'
     })
   }
 
@@ -53,7 +53,7 @@ const handler = async (req, res, next) => {
   if (web3.utils.toBN(balance).lt(web3.utils.toBN(channel.depositA))) {
     return res.status(400).json({
       message: 'Not enough balance to join the ledger channel.',
-      id
+      status: 'error'
     })
   }
 
@@ -64,8 +64,8 @@ const handler = async (req, res, next) => {
   })
 
   res.status(200).json({
-    message: 'Ledger channel joined.',
-    id
+    status: 'success',
+    data: { ledgerChannel: { id } }
   })
 }
 

@@ -10,7 +10,7 @@ const validator = [param('id').exists()]
 const handler = async (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.mapped() })
+    return res.status(422).json({ status: 'error', errors: errors.mapped() })
   }
   let { id } = matchedData(req)
   id = parseInt(id)
@@ -20,12 +20,14 @@ const handler = async (req, res, next) => {
   const vc = await VirtualChannel.findById(id)
   if (!vc) {
     return res.status(404).json({
+      status: 'error',
       message: `Could not find channel id: ${id}`
     })
   }
 
   if (!(await sendIngridOpeningCerts(vc))) {
     return res.status(400).json({
+      status: 'error',
       message: `Problem with opening certs, channel will be set to NotOpened after delta`
     })
   }
@@ -33,8 +35,8 @@ const handler = async (req, res, next) => {
   closeVcAfterValidity(vc)
 
   res.status(200).json({
-    message:
-      'Found certs and sent Ingrid opening cert, virtual channel is Opened'
+    status: 'success',
+    data: null
   })
 }
 

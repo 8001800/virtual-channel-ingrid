@@ -8,7 +8,7 @@ const validator = [param('id').exists(), body('ledgerChannelId').exists()]
 const handler = async (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.mapped() })
+    return res.status(422).json({ status: 'error', errors: errors.mapped() })
   }
   const { id, ledgerChannelId } = matchedData(req)
 
@@ -20,8 +20,8 @@ const handler = async (req, res, next) => {
   })
 
   return res.status(200).json({
-    message: 'VcCloseFinalTimeout called on contract',
-    id
+    status: 'success',
+    data: null
   })
 }
 
