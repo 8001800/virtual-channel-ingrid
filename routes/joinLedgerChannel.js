@@ -15,10 +15,8 @@ const handler = async (req, res, next) => {
 
   const ethcalate = getEthcalate()
   const web3 = getWeb3()
-
-  const channel = await ethcalate.getLedgerChannel(id)
+  const channel = await ethcalate.getLedgerChannel({ledgerChannelId: id})
   console.log('channel: ', channel)
-
   if (!channel) {
     return res.status(404).json({
       status: 'error',
@@ -57,8 +55,8 @@ const handler = async (req, res, next) => {
     })
   }
 
-  await ethcalate.joinChannel({
-    channelId: id,
+  await ethcalate.joinLedgerChannel({
+    ledgerChannelId: id,
     tokenContract: channel.tokenContract,
     depositInWei: channel.depositA
   })

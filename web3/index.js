@@ -73,11 +73,11 @@ module.exports.initChannelManager = async channelManagerAddress => {
 }
 
 module.exports.initEthcalate = async channelManagerAddress => {
-  ethcalate = new Ethcalate(
-    web3,
-    channelManagerAddress,
-    'http://localhost:3000'
-  )
+  ethcalate = new Ethcalate({
+    web3: web3,
+    contractAddress: channelManagerAddress,
+    apiUrl: 'http://localhost:3000'
+  })
   await ethcalate.initContract()
 }
 
